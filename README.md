@@ -154,7 +154,7 @@ We welcome contributions! Follow these steps:
 
 ## 🏆 Credits  
 
-- **Developer:** [Talent Nyota](https://github.com/devtalent2030)  
+- **Developer:** [Talent Nyota & Conner Cullity](https://github.com/devtalent2030)  
 - **Inspiration:** Sushi ordering and inventory management system  
 
 ---
