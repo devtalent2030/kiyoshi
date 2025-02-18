@@ -1,0 +1,83 @@
+/* General Animation for Words */
+.shake-once {
+    display: inline-block;
+    animation: advanced-move-once 2.5s ease-in-out; /* Slightly longer animation */
+    animation-fill-mode: forwards; /* Ensures it stays in the final state */
+}
+
+/* Keyframe for Advanced Movement */
+@keyframes advanced-move-once {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    20% {
+        transform: translateX(-15px) scale(1.1) rotate(-15deg);
+    }
+    40% {
+        transform: translateX(15px) scale(1) rotate(15deg);
+    }
+    60% {
+        transform: translateY(-15px) scale(0.95) rotate(0deg);
+    }
+    80% {
+        transform: translateY(15px) scale(1.2) rotate(-10deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+/* Special Animation for "Take-Out" */
+.shake-once.take-out {
+    animation: take-out-move-once 2.5s ease-in-out; /* Unique animation */
+    animation-fill-mode: forwards; /* Ensures it stays in the final state */
+}
+
+/* Keyframe for "Take-Out" */
+@keyframes take-out-move-once {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    20% {
+        transform: translateX(-15px) scale(1.5) rotate(-15deg);
+    }
+    40% {
+        transform: translateX(15px) scale(2) rotate(15deg);
+    }
+    60% {
+        transform: translateY(-20px) scale(3) rotate(0deg);
+    }
+    80% {
+        transform: translateY(20px) scale(4) rotate(-10deg); /* 4x size */
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+/* Text Color */
+.shake-orange {
+    color: #FF8C00; /* Deep orange */
+}
+
+
+/* Sushi-Themed Styling for "Take-Out" */
+.shake-once.take-out {
+    font-size: 3rem; /* Increase text size */
+    font-family: 'Kaushan Script', cursive; /* Sushi vibes font */
+    color: #FF8C00; /* Deep orange */
+    animation: take-out-move-once 2s ease-in-out; /* Subtle animation */
+}
+
+/* Animation for "Take-Out" */
+@keyframes take-out-move-once {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        transform: scale(1.3) rotate(5deg); /* Slight enlargement */
+    }
+    100% {
+        transform: scale(1) rotate(0deg); /* Back to normal */
+    }
+}
