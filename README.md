@@ -97,6 +97,95 @@ npm start
 The app will be available at: `http://localhost:3000/`
 
 ---
+```md
+## MySQL Setup & Troubleshooting
+
+### Starting MySQL
+To start the MySQL server, use the following command:
+
+```sh
+sudo /usr/local/mysql/support-files/mysql.server start
+```
+
+If successful, you should see:
+
+```sh
+Starting MySQL
+SUCCESS!
+```
+
+### Logging Into MySQL
+Once MySQL is running, log in using:
+
+```sh
+mysql -u root -p
+```
+
+Enter your MySQL root password when prompted.
+
+If successful, you should see:
+
+```sh
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.40 MySQL Community Server - GPL
+```
+
+---
+
+## Fixing MySQL Startup Issues
+If MySQL fails to start due to an improperly stopped instance, follow these steps:
+
+### 1️⃣ Remove the MySQL PID File  
+Run this command to delete any stale PID files:
+
+```sh
+sudo rm -f /usr/local/mysql/data/*.pid
+```
+
+### 2️⃣ Restart MySQL  
+Now, restart MySQL with:
+
+```sh
+sudo /usr/local/mysql/support-files/mysql.server start
+```
+
+Check its status:
+
+```sh
+sudo /usr/local/mysql/support-files/mysql.server status
+```
+
+Expected output:
+
+```sh
+SUCCESS! MySQL running (PID)
+```
+
+---
+
+### 3️⃣ Verify Database Connection  
+If MySQL starts successfully, log in and check if your database is accessible:
+
+```sh
+mysql -u root -p
+```
+
+Once inside MySQL, run:
+
+```sql
+SHOW DATABASES;
+USE kiyoshi_db;
+SHOW TABLES;
+```
+
+This ensures that your `kiyoshi_db` database is present and accessible.
+
+---
+
+✅ **You're all set!** If you encounter further issues, ensure MySQL is installed correctly and that the `mysqld` service is running.
+```
+
 
 ## 📂 Folder Structure  
 
