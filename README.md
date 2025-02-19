@@ -205,7 +205,7 @@ kiyoshi-database/
 │── seeders/                # Sample data for testing
 │── .gitignore              # Exclude sensitive files
 │── README.md               # Documentation
-```
+
 ---
 
 ## 📝 API Endpoints  
