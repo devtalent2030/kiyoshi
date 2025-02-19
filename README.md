@@ -189,7 +189,7 @@ This ensures that your `kiyoshi_db` database is present and accessible.
 ---
 ## 📂 Folder Structure  
 
-```
+
 kiyoshi-database/
 │── kiyoshi-app/            # Frontend (React)
 │   ├── src/
@@ -205,7 +205,7 @@ kiyoshi-database/
 │── seeders/                # Sample data for testing
 │── .gitignore              # Exclude sensitive files
 │── README.md               # Documentation
-
+```
 ---
 
 ## 📝 API Endpoints  
