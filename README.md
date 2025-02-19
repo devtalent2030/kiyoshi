@@ -186,7 +186,7 @@ This ensures that your `kiyoshi_db` database is present and accessible.
 ✅ **You're all set!** If you encounter further issues, ensure MySQL is installed correctly and that the `mysqld` service is running.
 ```
 
-
+---
 ## 📂 Folder Structure  
 
 ```
@@ -206,7 +206,6 @@ kiyoshi-database/
 │── .gitignore              # Exclude sensitive files
 │── README.md               # Documentation
 ```
-
 ---
 
 ## 📝 API Endpoints  
