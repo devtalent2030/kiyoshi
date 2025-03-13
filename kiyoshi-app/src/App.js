@@ -1,7 +1,8 @@
-// src/App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
+
+import { CartProvider } from './context/CartContext';
 
 import Header from './components/Layout/Header';
 import Sidebar from './components/Layout/Sidebar';
@@ -16,75 +17,38 @@ import Inventory from './components/Pages/Inventory';
 import CustomerPortal from './components/Pages/CustomerPortal';
 import ProtectedRoute from './components/Pages/ProtectedRoute';
 import Menu from './components/Pages/Menu';
+import Cart from './components/Pages/Cart'; // Add this import
 
 const App = () => {
-  // Controls Sidebar drawer on mobile
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen((prev) => !prev);
   };
 
   return (
-    <Router>
-      {/*
-        Pass handleDrawerToggle to Header so it can open the Sidebar on small screens
-      */}
-      <Header onDrawerToggle={handleDrawerToggle} />
-      
-      <Box sx={{ display: 'flex', pt: { xs: 8, sm: 8 } }}>
-        {/*
-          Pass mobileOpen + handleDrawerToggle to Sidebar so it can act as 
-          a permanent drawer on desktop or a temporary drawer on mobile
-        */}
-        <Sidebar mobileOpen={mobileOpen} onDrawerToggle={handleDrawerToggle} />
-        
-        {/* Main Content Area */}
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+    <CartProvider>
+      <Router>
+        <Header onDrawerToggle={handleDrawerToggle} />
+        <Box sx={{ display: 'flex', pt: { xs: 8, sm: 8 } }}>
+          <Sidebar mobileOpen={mobileOpen} onDrawerToggle={handleDrawerToggle} />
+          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
 
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/orders"
-              element={
-                <ProtectedRoute>
-                  <Orders />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/inventory"
-              element={
-                <ProtectedRoute>
-                  <Inventory />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/portal"
-              element={
-                <ProtectedRoute>
-                  <CustomerPortal />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/menu" element={<Menu />} />
-          </Routes>
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+              <Route path="/inventory" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
+              <Route path="/portal" element={<ProtectedRoute><CustomerPortal /></ProtectedRoute>} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/cart" element={<Cart />} /> {/* Add this route */}
+            </Routes>
+          </Box>
         </Box>
-      </Box>
-
-      <Footer />
-    </Router>
+        <Footer />
+      </Router>
+    </CartProvider>
   );
 };
 

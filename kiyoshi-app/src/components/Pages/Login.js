@@ -1,4 +1,3 @@
-// src/components/Pages/Login.js
 import React, { useState } from 'react';
 import {
   Box,
@@ -20,12 +19,12 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axiosInstance.post('/auth/login', { email, password });
+      const response = await axiosInstance.post('/api/auth/login', { email, password });
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        console.log('Logged in with token:', response.data.token);
 
-        // If admin, navigate to dashboard, else to either intended page or homepage
         if (response.data.user.role === 'admin') {
           navigate('/dashboard');
         } else {
@@ -36,7 +35,9 @@ const Login = () => {
         setError(response.data.message || 'Login failed.');
       }
     } catch (err) {
-      setError('Failed to login. Please try again.');
+      const errorMsg = err.response?.data?.error || 'Failed to login. Please try again.';
+      setError(errorMsg);
+      console.error('Login error:', err.response?.data || err.message);
     }
   };
 
@@ -51,10 +52,7 @@ const Login = () => {
         overflow: 'hidden',
       }}
     >
-      {/* Sushi Animation as background */}
       <SushiAnimation />
-
-      {/* Semi-transparent form */}
       <Box
         sx={{
           position: 'absolute',
@@ -102,9 +100,7 @@ const Login = () => {
           fullWidth
           sx={{
             backgroundColor: '#ef5350',
-            '&:hover': {
-              backgroundColor: '#d84343',
-            },
+            '&:hover': { backgroundColor: '#d84343' },
             mb: 2,
           }}
           onClick={handleLogin}

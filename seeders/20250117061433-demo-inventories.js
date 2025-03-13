@@ -2,19 +2,23 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const fishes = await queryInterface.sequelize.query(
-      'SELECT id FROM Fishes',
+    // Fetch all Menu Items from the database
+    const menuItems = await queryInterface.sequelize.query(
+      'SELECT id FROM MenuItems',  // ✅ Fetch from MenuItems instead of Fishes
       { type: Sequelize.QueryTypes.SELECT }
     );
 
-    if (fishes.length > 0) {
-      return queryInterface.bulkInsert('Inventories', fishes.map((fish, i) => ({
-        FishID: fish.id,
-        CurrentStock: (i + 11) * 20,
-        LastUpdated: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })));
+    if (menuItems.length > 0) {
+      return queryInterface.bulkInsert(
+        'Inventories',
+        menuItems.map((menuItem, i) => ({
+          MenuItemID: menuItem.id, // ✅ Use MenuItemID instead of FishID
+          CurrentStock: (i + 11) * 20, // Assign stock values dynamically
+          LastUpdated: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }))
+      );
     }
 
     return null;

@@ -9,12 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      FishID: {
+      MenuItemID: {  // ✅ Changed from FishID to MenuItemID
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Fishes', // Name of the target table
-          key: 'id',       // Key in the target table
+          model: 'MenuItems', // ✅ Now links to MenuItems table
+          key: 'id',         
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
@@ -27,7 +27,7 @@ module.exports = {
       LastUpdated: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       createdAt: {
         allowNull: false,

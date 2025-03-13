@@ -3,8 +3,8 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Supplier extends Model {
     static associate(models) {
-      // A Supplier can have many Fishes
-      Supplier.hasMany(models.Fish, { foreignKey: 'SupplierID' });
+      // Remove reference to Fish if no longer needed
+      // Supplier.hasMany(models.Fish, { foreignKey: 'SupplierID' });
     }
   }
   Supplier.init({

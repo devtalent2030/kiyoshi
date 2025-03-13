@@ -8,9 +8,17 @@ import {
   IconButton,
   useMediaQuery,
 } from '@mui/material';
+import { motion } from 'framer-motion';
 import MenuIcon from '@mui/icons-material/Menu';
+import SushiIcon from '@mui/icons-material/LocalDining'; // Sushi-themed icon
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+
+// Animation variants
+const buttonVariants = {
+  hover: { scale: 1.1, color: '#ffeb3b' },
+  tap: { scale: 0.95 },
+};
 
 const Header = ({ onDrawerToggle }) => {
   const navigate = useNavigate();
@@ -31,84 +39,85 @@ const Header = ({ onDrawerToggle }) => {
     <AppBar
       position="fixed"
       sx={{
-        backgroundColor: '#ef5350',
+        background: 'linear-gradient(90deg, #ff5722 0%, #ef5350 100%)', // Sushi orange gradient
         zIndex: (theme) => theme.zIndex.drawer + 1,
         width: '100%',
-        maxWidth: '1200px', // Limit the header width
-        margin: '0 auto', // Center the header
-        left: 0, // Ensure alignment
-        right: 0, // Ensure alignment
+        maxWidth: '1400px',
+        mx: 'auto',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+        borderBottom: '2px solid #388e3c', // Seaweed green accent
       }}
     >
       <Toolbar
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          padding: { xs: '0 8px', sm: '0 16px' }, // Reduced padding for smaller screens
+          padding: { xs: '0 12px', sm: '0 24px' },
+          backgroundColor: 'rgba(255, 255, 255, 0.1)', // Glassy overlay
+          backdropFilter: 'blur(5px)',
         }}
       >
-        {/* Title / Logo */}
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 'bold',
-            whiteSpace: 'nowrap', // Prevent text from wrapping
-            overflow: 'hidden', // Hide overflow content
-            textOverflow: 'ellipsis', // Add ellipsis if content overflows
-            fontSize: { xs: '1rem', sm: '1.2rem' }, // Smaller font size on mobile
-          }}
-        >
-          Kiyoshi Take-Out
-        </Typography>
+        {/* Logo/Title */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
+            <SushiIcon sx={{ fontSize: { xs: '1.5rem', sm: '2rem' }, mr: 1, color: '#fff' }} />
+            <Typography
+              variant="h6"
+              sx={{
+                fontFamily: "'Sawarabi Mincho', serif",
+                fontWeight: 'bold',
+                color: '#fff',
+                textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5)',
+                fontSize: { xs: '1.2rem', sm: '1.5rem' },
+              }}
+            >
+              
+            </Typography>
+          </motion.div>
+        </Box>
 
         {/* Desktop Nav */}
         {!isSmallScreen && (
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button color="inherit" sx={{ fontSize: '0.9rem' }} component={Link} to="/">
-              Home
-            </Button>
-            <Button color="inherit" sx={{ fontSize: '0.9rem' }} component={Link} to="/menu">
-              Menu
-            </Button>
-            {isLoggedIn && (
-              <Button color="inherit" sx={{ fontSize: '0.9rem' }} component={Link} to="/orders">
-                Orders
-              </Button>
-            )}
-            {isLoggedIn && (
-              <Button color="inherit" sx={{ fontSize: '0.9rem' }} component={Link} to="/portal">
-                Customer Portal
-              </Button>
-            )}
-            {isAdmin && (
-              <Button color="inherit" sx={{ fontSize: '0.9rem' }} component={Link} to="/dashboard">
-                Dashboard
-              </Button>
-            )}
-            {isAdmin && (
-              <Button color="inherit" sx={{ fontSize: '0.9rem' }} component={Link} to="/inventory">
-                Inventory
-              </Button>
-            )}
-            {isLoggedIn && (
-              <Button color="inherit" sx={{ fontSize: '0.9rem' }} onClick={handleLogout}>
-                Logout
-              </Button>
-            )}
+          <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 } }}>
+            {[
+              { to: '/', label: 'Home' },
+              { to: '/menu', label: 'Menu' },
+              ...(isLoggedIn ? [{ to: '/orders', label: 'Orders' }, { to: '/portal', label: 'Portal' }] : []),
+              ...(isAdmin ? [{ to: '/dashboard', label: 'Dashboard' }, { to: '/inventory', label: 'Inventory' }] : []),
+              ...(isLoggedIn ? [{ label: 'Logout', onClick: handleLogout }] : []),
+            ].map((item, idx) => (
+              <motion.div key={idx} variants={buttonVariants} whileHover="hover" whileTap="tap">
+                <Button
+                  color="inherit"
+                  sx={{
+                    fontFamily: "'Sawarabi Mincho', serif",
+                    fontSize: { xs: '0.8rem', sm: '1rem' },
+                    textTransform: 'none',
+                    color: '#fff',
+                    '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+                  }}
+                  component={item.to ? Link : 'button'}
+                  to={item.to}
+                  onClick={item.onClick}
+                >
+                  {item.label}
+                </Button>
+              </motion.div>
+            ))}
           </Box>
         )}
 
-        {/* Mobile Hamburger Icon */}
+        {/* Mobile Hamburger */}
         {isSmallScreen && (
-          <IconButton
-            color="inherit"
-            onClick={onDrawerToggle}
-            sx={{
-              marginLeft: 'auto', // Push to the right
-            }}
-          >
-            <MenuIcon sx={{ fontSize: '1.5rem' }} />
-          </IconButton>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <IconButton
+              color="inherit"
+              onClick={onDrawerToggle}
+              sx={{ ml: 'auto', backgroundColor: 'rgba(255, 255, 255, 0.1)', borderRadius: '50%' }}
+            >
+              <MenuIcon sx={{ fontSize: '1.8rem' }} />
+            </IconButton>
+          </motion.div>
         )}
       </Toolbar>
     </AppBar>

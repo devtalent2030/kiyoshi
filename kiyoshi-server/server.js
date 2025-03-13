@@ -32,6 +32,8 @@ const authRoutes = require('./routes/auth');
 const ordersRoutes = require('./routes/orders');
 const inventoryRoutes = require('./routes/inventory');
 const menuRoutes = require('./routes/menu');
+const smsWebhookRoutes = require('./routes/smsWebhook'); // ✅ Import Twilio SMS webhook route
+
 const authorize = require('./middleware/authMiddleware');
 
 // Public route
@@ -46,6 +48,7 @@ app.use('/api/inventory', authorize(['admin']), inventoryRoutes); // Admin-only
 app.use('/api/menu', menuRoutes); // Public
 app.use('/api/customers', customersRouter); // Protected inside routes/customers.js
 app.use('/api/dashboard', dashboardRoutes); // Assume appropriate middleware inside routes
+app.use('/api/sms-webhook', smsWebhookRoutes); // ✅ Register the SMS webhook route
 
 // Catch-all route for undefined routes
 app.use((req, res, next) => {

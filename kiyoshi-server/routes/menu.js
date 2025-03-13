@@ -6,9 +6,10 @@ const { MenuItem } = require(`${process.env.MODELS_PATH}`);
 router.get('/', async (req, res) => {
   try {
     const menuItems = await MenuItem.findAll({
-      attributes: ['id', 'itemName', 'description', 'price', 'imageURL'],
+      attributes: ['id', 'itemName', 'description', 'price', 'imageURL'], // Use model attribute names
     });
 
+    console.log('Menu Items:', JSON.stringify(menuItems, null, 2)); // Add debug log
     res.json(menuItems);
   } catch (error) {
     console.error('Error fetching menu items:', error);

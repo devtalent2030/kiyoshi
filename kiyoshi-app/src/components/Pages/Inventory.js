@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../axiosInstance';
 import {
-  Box, Typography, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, IconButton, TextField, Button,
+  Box, Typography, Table, TableContainer, TableHead, TableBody,
+  TableRow, TableCell, Paper, IconButton, TextField, Button,
 } from '@mui/material';
+import { motion } from 'framer-motion';
 import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+
+// Animation variants
+const rowVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  hover: { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+};
 
 const Inventory = () => {
-  const [fishes, setFishes] = useState([]);
+  const [items, setItems] = useState([]);
   const [editRowId, setEditRowId] = useState(null);
   const [editStockValue, setEditStockValue] = useState('');
   const [editPriceValue, setEditPriceValue] = useState('');
@@ -15,54 +24,57 @@ const Inventory = () => {
 
   useEffect(() => {
     axiosInstance
-      .get('/inventory')
+      .get('/api/inventory')
       .then((res) => {
-        setFishes(
+        console.log('Inventory response:', res.data);
+        setItems(
           res.data.map((item) => ({
             id: item.id,
-            fishName: item.fishName ?? 'Unknown Fish', // Default value
-            currentStock: item.currentStock ?? 0, // Default value
-            currentPrice: item.currentPrice ?? 0, // Default value
-            supplier: item.supplier ?? 'Unknown Supplier', // Default value
+            itemName: item.itemName ?? 'Unknown Item',
+            currentStock: item.currentStock ?? 0,
+            currentPrice: item.currentPrice ?? 0,
           }))
         );
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error(err);
+        console.error('Error fetching inventory:', err.response?.data || err.message);
         setIsLoading(false);
       });
   }, []);
 
-  const handleEditClick = (fish) => {
-    setEditRowId(fish.id);
-    setEditStockValue(fish.currentStock);
-    setEditPriceValue(fish.currentPrice);
+  const handleEditClick = (item) => {
+    setEditRowId(item.id);
+    setEditStockValue(item.currentStock);
+    setEditPriceValue(item.currentPrice);
   };
 
-  const handleSaveClick = (fishId) => {
+  const handleSaveClick = (itemId) => {
     axiosInstance
-      .put(`/inventory/${fishId}`, {
-        currentStock: editStockValue,
-        currentPrice: editPriceValue,
+      .put(`/api/inventory/${itemId}`, {
+        currentStock: parseInt(editStockValue, 10),
+        currentPrice: parseFloat(editPriceValue),
       })
       .then(() => {
-        setFishes((prevFishes) =>
-          prevFishes.map((fish) =>
-            fish.id === fishId
-              ? { ...fish, currentStock: editStockValue, currentPrice: editPriceValue }
-              : fish
+        setItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === itemId
+              ? { ...item, currentStock: parseInt(editStockValue, 10), currentPrice: parseFloat(editPriceValue) }
+              : item
           )
         );
         setEditRowId(null);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error('Error updating inventory:', err.response?.data || err.message));
   };
 
   if (isLoading) {
     return (
-      <Typography variant="h6" sx={{ textAlign: 'center', mt: 5 }}>
-        Loading inventory data...
+      <Typography
+        variant="h6"
+        sx={{ textAlign: 'center', mt: 5, fontFamily: "'Sawarabi Mincho', serif", color: '#fff' }}
+      >
+        Loading sushi inventory...
       </Typography>
     );
   }
@@ -70,100 +82,112 @@ const Inventory = () => {
   return (
     <Box
       sx={{
-        mt: 2,
+        mt: 4,
         p: 3,
-        background: 'linear-gradient(to bottom, #ffffff, #f5f5f5)',
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%)', // Sushi-themed gradient
         borderRadius: 2,
-        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+        minHeight: '100vh',
+        color: '#fff',
       }}
     >
-      <Typography
-        variant="h4"
-        gutterBottom
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            fontFamily: "'Sawarabi Mincho', serif",
+            fontWeight: 'bold',
+            color: '#ff5722', // Salmon orange
+            textAlign: 'center',
+            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+          }}
+        >
+          Sushi Inventory Management
+        </Typography>
+      </motion.div>
+
+      <TableContainer
+        component={Paper}
         sx={{
-          fontWeight: 'bold',
-          color: '#ef5350',
-          textAlign: 'center',
+          borderRadius: 2,
+          backgroundColor: 'rgba(255, 255, 255, 0.15)', // Glassmorphism
+          backdropFilter: 'blur(10px)',
+          mt: 3,
         }}
       >
-        Inventory Management
-      </Typography>
-
-      <TableContainer component={Paper} sx={{ borderRadius: 2, overflow: 'hidden', mt: 3 }}>
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#ef5350' }}>
-              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Fish ID</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Fish Name</TableCell>
+            <TableRow sx={{ backgroundColor: '#388e3c' }}> {/* Seaweed green */}
+              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Item ID</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Item Name</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Stock</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Price (USD)</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Supplier</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>
-                Actions
-              </TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {fishes.map((fish) => (
-              <TableRow key={fish.id} sx={{ '&:hover': { backgroundColor: '#f9f9f9' } }}>
-                <TableCell>{fish.id}</TableCell>
-                <TableCell>{fish.fishName}</TableCell>
-                <TableCell>
-                  {editRowId === fish.id ? (
+            {items.map((item) => (
+              <motion.tr key={item.id} variants={rowVariants} initial="hidden" animate="visible" whileHover="hover">
+                <TableCell sx={{ color: '#fff' }}>{item.id}</TableCell>
+                <TableCell sx={{ color: '#fff' }}>{item.itemName}</TableCell>
+                <TableCell sx={{ color: '#ffeb3b' }}>
+                  {editRowId === item.id ? (
                     <TextField
                       type="number"
                       value={editStockValue}
                       onChange={(e) => setEditStockValue(e.target.value)}
                       size="small"
-                      sx={{ width: 80 }}
+                      sx={{ width: 80, backgroundColor: 'rgba(255, 255, 255, 0.2)', '& .MuiInputBase-input': { color: '#fff' } }}
                     />
                   ) : (
-                    fish.currentStock
+                    item.currentStock
                   )}
                 </TableCell>
-                <TableCell>
-                  {editRowId === fish.id ? (
+                <TableCell sx={{ color: '#ffeb3b' }}>
+                  {editRowId === item.id ? (
                     <TextField
                       type="number"
                       value={editPriceValue}
                       onChange={(e) => setEditPriceValue(e.target.value)}
                       size="small"
-                      sx={{ width: 80 }}
+                      sx={{ width: 80, backgroundColor: 'rgba(255, 255, 255, 0.2)', '& .MuiInputBase-input': { color: '#fff' } }}
                     />
                   ) : (
-                    `$${fish.currentPrice.toFixed(2)}`
+                    `$${Number(item.currentPrice).toFixed(2)}`
                   )}
                 </TableCell>
-                <TableCell>{fish.supplier}</TableCell>
                 <TableCell align="center">
-                  {editRowId === fish.id ? (
-                    <Button
-                      variant="contained"
-                      size="small"
-                      sx={{
-                        backgroundColor: '#26a69a',
-                        '&:hover': { backgroundColor: '#1f8b7b' },
-                        textTransform: 'none',
-                      }}
-                      onClick={() => handleSaveClick(fish.id)}
-                    >
-                      Save
-                    </Button>
+                  {editRowId === item.id ? (
+                    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        sx={{
+                          backgroundColor: '#ff5722', // Salmon orange
+                          '&:hover': { backgroundColor: '#e64a19' },
+                        }}
+                        onClick={() => handleSaveClick(item.id)}
+                        startIcon={<SaveIcon />}
+                      >
+                        Save
+                      </Button>
+                    </motion.div>
                   ) : (
-                    <IconButton
-                      sx={{ color: '#ef5350' }}
-                      onClick={() => handleEditClick(fish)}
-                    >
+                    <IconButton sx={{ color: '#fff' }} onClick={() => handleEditClick(item)}>
                       <EditIcon />
                     </IconButton>
                   )}
                 </TableCell>
-              </TableRow>
+              </motion.tr>
             ))}
-            {fishes.length === 0 && (
+            {items.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} align="center">
-                  No data available
+                <TableCell colSpan={5} align="center" sx={{ color: '#b0bec5' }}>
+                  No sushi items in inventory
                 </TableCell>
               </TableRow>
             )}
