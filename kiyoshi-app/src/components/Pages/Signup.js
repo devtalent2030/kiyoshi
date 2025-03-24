@@ -8,7 +8,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import axiosInstance from '../../axiosInstance'; // Use centralized Axios instance
+import axiosInstance from '../../axiosInstance';
 
 const Signup = () => {
   const [firstName, setFirstName] = useState('');
@@ -28,10 +28,21 @@ const Signup = () => {
       return;
     }
 
+    // Additional validation (optional)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+
     setIsLoading(true);
-    setError(''); // Clear any previous error
+    setError('');
     try {
-      const response = await axiosInstance.post('/auth/signup', {
+      const response = await axiosInstance.post('/api/auth/signup', { // Fixed endpoint
         firstName,
         lastName,
         email,
@@ -40,12 +51,18 @@ const Signup = () => {
 
       if (response.status === 201) {
         // Successful signup, redirect to login
-        navigate('/login');
+        navigate('/login', { state: { signupSuccess: true } }); // Optional: pass success state
       } else {
         setError(response.data.message || 'Signup failed.');
       }
     } catch (err) {
-      setError('Failed to sign up. Please try again.');
+      // Improved error handling
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message); // e.g., "Email already exists"
+      } else {
+        setError('Failed to sign up. Please try again.');
+      }
+      console.error('Signup error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +100,7 @@ const Signup = () => {
         </Typography>
 
         {error && (
-          <Typography color="error" sx={{ mb: 2 }}>
+          <Typography color="error" sx={{ mb: 2, textAlign: 'center' }}>
             {error}
           </Typography>
         )}
@@ -96,6 +113,7 @@ const Signup = () => {
             onChange={(e) => setFirstName(e.target.value)}
             fullWidth
             sx={{ mb: 2 }}
+            required
           />
           <TextField
             label="Last Name"
@@ -104,14 +122,17 @@ const Signup = () => {
             onChange={(e) => setLastName(e.target.value)}
             fullWidth
             sx={{ mb: 2 }}
+            required
           />
           <TextField
             label="Email"
             variant="outlined"
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             fullWidth
             sx={{ mb: 2 }}
+            required
           />
           <TextField
             label="Password"
@@ -121,6 +142,7 @@ const Signup = () => {
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
             sx={{ mb: 2 }}
+            required
           />
 
           <Button

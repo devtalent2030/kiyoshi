@@ -32,7 +32,7 @@ const authRoutes = require('./routes/auth');
 const ordersRoutes = require('./routes/orders');
 const inventoryRoutes = require('./routes/inventory');
 const menuRoutes = require('./routes/menu');
-const smsWebhookRoutes = require('./routes/smsWebhook'); // ✅ Import Twilio SMS webhook route
+const smsWebhookRoutes = require('./routes/smsWebhook'); 
 
 const authorize = require('./middleware/authMiddleware');
 
