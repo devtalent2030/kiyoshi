@@ -3,20 +3,18 @@ require('dotenv').config(); // Load environment variables FIRST
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path'); // Import path for serving static files
+const path = require('path');
 
-const app = express(); // Initialize the Express app
+const app = express();
 
 // Middleware
-app.use(cors()); // Enable CORS
-app.use(express.json()); // Parse JSON requests
-app.use(bodyParser.json()); // For parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
-
-// Serve static files from the 'public/menu-items' directory
+app.use(cors());
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/menu-items', express.static(path.join(__dirname, 'public/menu-items')));
 
-// Debugging: Log all incoming requests (Optional)
+// Debugging: Log incoming requests
 app.use((req, res, next) => {
   console.log(`Incoming Request: ${req.method} ${req.url}`, {
     headers: req.headers,
@@ -32,37 +30,34 @@ const authRoutes = require('./routes/auth');
 const ordersRoutes = require('./routes/orders');
 const inventoryRoutes = require('./routes/inventory');
 const menuRoutes = require('./routes/menu');
-const smsWebhookRoutes = require('./routes/smsWebhook'); 
-
+const smsWebhookRoutes = require('./routes/smsWebhook');
 const authorize = require('./middleware/authMiddleware');
 
-// Public route
+// Routes
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the API' });
+  res.json({ message: 'Welcome to the Kiyoshi API' });
 });
+app.use('/api/auth', authRoutes);
+app.use('/api/orders', authorize(['customer', 'admin']), ordersRoutes);
+app.use('/api/inventory', authorize(['admin']), inventoryRoutes);
+app.use('/api/menu', menuRoutes);
+app.use('/api/customers', customersRouter);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/sms-webhook', smsWebhookRoutes);
 
-// Routes with middleware
-app.use('/api/auth', authRoutes); // Public
-app.use('/api/orders', authorize(['customer', 'admin']), ordersRoutes); // Protected
-app.use('/api/inventory', authorize(['admin']), inventoryRoutes); // Admin-only
-app.use('/api/menu', menuRoutes); // Public
-app.use('/api/customers', customersRouter); // Protected inside routes/customers.js
-app.use('/api/dashboard', dashboardRoutes); // Assume appropriate middleware inside routes
-app.use('/api/sms-webhook', smsWebhookRoutes); // ✅ Register the SMS webhook route
-
-// Catch-all route for undefined routes
+// 404 Handler
 app.use((req, res, next) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Error handling middleware
+// Error Handler
 app.use((err, req, res, next) => {
   console.error('Server Error:', err.stack || err);
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-// Start the server
-const PORT = process.env.PORT || 5000;
+// Start server with dynamic PORT
+const PORT = process.env.PORT || 4000; // Changed from 5000 to match your local setup
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
