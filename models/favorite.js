@@ -2,39 +2,42 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Favorite extends Model {
+  class Inventory extends Model {
     static associate(models) {
-      // A Favorite belongs to one Customer
-      Favorite.belongsTo(models.Customer, { 
-        foreignKey: 'CustomerID', 
-        as: 'Customer' 
-      });
-
-      // A Favorite belongs to one MenuItem
-      Favorite.belongsTo(models.MenuItem, { 
-        foreignKey: 'MenuItemID', 
-        as: 'MenuItem' 
+      // Inventory belongs to a MenuItem
+      Inventory.belongsTo(models.MenuItem, { 
+        foreignKey: 'MenuItemID',
+        as: 'MenuItem' // Add alias for consistency
       });
     }
   }
 
-  Favorite.init(
+  Inventory.init(
     {
-      CustomerID: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
       MenuItemID: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'MenuItems',
+          key: 'id',
+        },
+      },
+      CurrentStock: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      LastUpdated: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     },
     {
       sequelize,
-      modelName: 'Favorite',
-      tableName: 'Favorites', // Ensure it matches your actual table name
+      modelName: 'Inventory',
+      tableName: 'Inventories',
+      timestamps: true,
     }
   );
 
-  return Favorite;
+  return Inventory;
 };

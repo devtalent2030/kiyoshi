@@ -11,14 +11,37 @@ module.exports = (sequelize, DataTypes) => {
 
   Order.init(
     {
-      CustomerID: { type: DataTypes.INTEGER, allowNull: false },
-      OrderDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-      OrderStatus: { type: DataTypes.STRING, defaultValue: 'Pending' },
-      TotalPrice: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.0 },
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      CustomerID: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false,
+        references: {
+          model: 'Customers',
+          key: 'id',
+        },
+      },
+      OrderDate: { 
+        type: DataTypes.DATE, 
+        defaultValue: DataTypes.NOW 
+      },
+      OrderStatus: { 
+        type: DataTypes.STRING, 
+        defaultValue: 'Pending' 
+      },
+      TotalPrice: { 
+        type: DataTypes.DECIMAL(10, 2), 
+        defaultValue: 0.0 
+      },
     },
     {
       sequelize,
       modelName: 'Order',
+      tableName: 'Orders', // Adjust if your table name is different
+      timestamps: false, // Set to true if your table has createdAt/updatedAt
     }
   );
 
