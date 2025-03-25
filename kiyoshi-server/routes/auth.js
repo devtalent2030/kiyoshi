@@ -1,18 +1,17 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { Customer } = require(`${process.env.MODELS_PATH}`); // Use MODELS_PATH for importing models
+const { Customer } = require(`${process.env.MODELS_PATH}`);
 
 const router = express.Router();
 
-// Login Route
+// Login Route (unchanged)
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
-        // Fetch the user with explicit inclusion of the 'Role' field
         const user = await Customer.findOne({
             where: { EmailAddress: email },
-            attributes: ['id', 'EmailAddress', 'Password', 'Role'], // Include Role here
+            attributes: ['id', 'EmailAddress', 'Password', 'Role'],
         });
 
         if (!user) {
@@ -20,16 +19,14 @@ router.post('/login', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check password
         const isMatch = await bcrypt.compare(password, user.Password);
         if (!isMatch) {
             console.error('Invalid credentials for email:', email);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Generate token without expiration
         const tokenPayload = { id: user.id, email: user.EmailAddress, role: user.Role };
-        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET); // No expiration set
+        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET);
 
         console.log('Login successful:', tokenPayload);
 
@@ -43,25 +40,29 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Signup Route
+// Signup Route (with debugging)
 router.post('/signup', async (req, res) => {
+    console.log('Signup request body:', req.body); // Log incoming data
     const { firstName, lastName, email, password } = req.body;
     try {
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        if (!firstName || !lastName || !email || !password) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
 
-        // Create new user
+        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log('Hashed password:', hashedPassword); // Log hash
+
         const newUser = await Customer.create({
-            FirstName: firstName,
-            LastName: lastName,
+            firstName,
+            lastName,
             EmailAddress: email,
             Password: hashedPassword,
-            Role: 'customer', // Default role for new users
+            Role: 'customer'
         });
+        console.log('New user created:', newUser.toJSON()); // Log created user
 
-        // Generate token without expiration
         const tokenPayload = { id: newUser.id, email: newUser.EmailAddress, role: newUser.Role };
-        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET); // No expiration set
+        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET);
 
         console.log('Signup successful:', tokenPayload);
 
@@ -70,10 +71,9 @@ router.post('/signup', async (req, res) => {
             user: { id: newUser.id, email: newUser.EmailAddress, role: newUser.Role },
         });
     } catch (err) {
-        console.error('Error during signup process:', err);
-        res.status(500).json({ message: 'Error signing up', error: err.message });
+        console.error('Signup error:', err.name, err.message, err.stack); // Detailed error log
+        res.status(500).json({ message: 'Signup failed', error: err.message });
     }
 });
-
 
 module.exports = router;

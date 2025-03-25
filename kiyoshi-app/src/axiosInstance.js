@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:4000', // Remove /api from baseURL
+  baseURL: 'http://localhost:4000', // Updated to match server port 5000
 });
 
 // Request interceptor to attach the token
@@ -11,7 +11,7 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
       console.log('Token attached to request:', config.headers.Authorization);
-      console.log('Full request URL:', `${config.baseURL}${config.url}`); // Debug full URL
+      console.log('Full request URL:', `${config.baseURL}${config.url}`);
     } else {
       console.warn('No token found in localStorage. Request sent without Authorization header.');
     }
