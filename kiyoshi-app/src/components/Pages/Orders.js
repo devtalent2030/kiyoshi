@@ -17,7 +17,7 @@ import {
 import { motion } from 'framer-motion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import RestaurantIcon from '@mui/icons-material/Restaurant'; // Sushi-related icon
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import axiosInstance from '../../axiosInstance';
 
 // Animation variants
@@ -173,14 +173,21 @@ const Orders = () => {
                     <Box sx={{ flex: 1 }}>
                       <Typography
                         variant="h6"
-                        sx={{ fontFamily: "'Sawarabi Mincho', serif", fontWeight: 'bold' }}
+                        sx={{
+                          fontFamily: "'Sawarabi Mincho', serif",
+                          fontWeight: 'bold',
+                          color: '#ddd', // Changed from black to light grey
+                        }}
                       >
                         Order #{order.id} - {order.customerName}
                       </Typography>
                       <Typography variant="body2" sx={{ color: '#ffeb3b' }}>
                         Status: {order.status}
                       </Typography>
-                      <Typography variant="body2">
+                      <Typography
+                        variant="body2"
+                        sx={{ color: '#ddd' }} // Changed from black to light grey
+                      >
                         Total: ${order.totalPrice.toFixed(2)}
                       </Typography>
                       <Typography variant="body2" sx={{ color: '#b0bec5' }}>
@@ -197,19 +204,19 @@ const Orders = () => {
                   <Collapse in={expandedOrder === order.id}>
                     <CardContent sx={{ backgroundColor: 'rgba(0, 0, 0, 0.2)', p: 2 }}>
                       <Grid container spacing={1}>
-                        <Grid item xs={6}><Typography variant="subtitle1">Item</Typography></Grid>
-                        <Grid item xs={3}><Typography variant="subtitle1">Qty</Typography></Grid>
-                        <Grid item xs={3}><Typography variant="subtitle1">Total</Typography></Grid>
+                        <Grid item xs={6}><Typography variant="subtitle1" sx={{ color: '#ddd' }}>Item</Typography></Grid>
+                        <Grid item xs={3}><Typography variant="subtitle1" sx={{ color: '#ddd' }}>Qty</Typography></Grid>
+                        <Grid item xs={3}><Typography variant="subtitle1" sx={{ color: '#ddd' }}>Total</Typography></Grid>
                         {order.items.map((item, index) => (
                           <React.Fragment key={index}>
                             <Grid item xs={6}>
-                              <Typography variant="body2">{item.name}</Typography>
+                              <Typography variant="body2" sx={{ color: '#ddd' }}>{item.name}</Typography>
                             </Grid>
                             <Grid item xs={3}>
-                              <Typography variant="body2">{item.quantity}</Typography>
+                              <Typography variant="body2" sx={{ color: '#ddd' }}>{item.quantity}</Typography>
                             </Grid>
                             <Grid item xs={3}>
-                              <Typography variant="body2">${item.lineTotal.toFixed(2)}</Typography>
+                              <Typography variant="body2" sx={{ color: '#ddd' }}>${item.lineTotal.toFixed(2)}</Typography>
                             </Grid>
                           </React.Fragment>
                         ))}

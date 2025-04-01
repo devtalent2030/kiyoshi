@@ -1,21 +1,22 @@
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables FIRST
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path');
-const { sequelize } = require('./db'); // Import Sequelize instance
+const path = require('path'); // Import path for serving static files
 
-const app = express();
+const app = express(); // Initialize the Express app
 
 // Middleware
-app.use(cors());
-app.use(express.json()); // Replaces body-parser.json()
-app.use(express.urlencoded({ extended: true })); // Replaces body-parser.urlencoded()
+app.use(cors()); // Enable CORS
+app.use(express.json()); // Parse JSON requests
+app.use(bodyParser.json()); // For parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
-// Serve static files
+// Serve static files from the 'public/menu-items' directory
 app.use('/menu-items', express.static(path.join(__dirname, 'public/menu-items')));
 
-// Debugging middleware (optional)
+// Debugging: Log all incoming requests (Optional)
 app.use((req, res, next) => {
   console.log(`Incoming Request: ${req.method} ${req.url}`, {
     headers: req.headers,
@@ -31,7 +32,8 @@ const authRoutes = require('./routes/auth');
 const ordersRoutes = require('./routes/orders');
 const inventoryRoutes = require('./routes/inventory');
 const menuRoutes = require('./routes/menu');
-const smsWebhookRoutes = require('./routes/smsWebhook');
+const smsWebhookRoutes = require('./routes/smsWebhook'); 
+
 const authorize = require('./middleware/authMiddleware');
 
 // Public route
@@ -39,34 +41,28 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the API' });
 });
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/orders', authorize(['customer', 'admin']), ordersRoutes);
-app.use('/api/inventory', authorize(['admin']), inventoryRoutes);
-app.use('/api/menu', menuRoutes);
-app.use('/api/customers', customersRouter);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/sms-webhook', smsWebhookRoutes);
+// Routes with middleware
+app.use('/api/auth', authRoutes); // Public
+app.use('/api/orders', authorize(['customer', 'admin']), ordersRoutes); // Protected
+app.use('/api/inventory', authorize(['admin']), inventoryRoutes); // Admin-only
+app.use('/api/menu', menuRoutes); // Public
+app.use('/api/customers', customersRouter); // Protected inside routes/customers.js
+app.use('/api/dashboard', dashboardRoutes); // Assume appropriate middleware inside routes
+app.use('/api/sms-webhook', smsWebhookRoutes); // ✅ Register the SMS webhook route
 
-// Catch-all route
+// Catch-all route for undefined routes
 app.use((req, res, next) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Error handling
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Server Error:', err.stack || err);
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-// Start server after Sequelize sync
+// Start the server
 const PORT = process.env.PORT || 5000;
-sequelize.sync({ force: false }) // Sync models with DB (force: false preserves data)
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error('Failed to sync database:', err);
-  });
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

@@ -9,15 +9,17 @@ import {
   Typography,
   Box,
   useMediaQuery,
+  IconButton,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import SushiIcon from '@mui/icons-material/LocalDining';
+import CloseIcon from '@mui/icons-material/Close';
 import '../../assets/Sidebar.css';
 
 const drawerWidth = 260;
 
-const Sidebar = ({ mobileOpen, onDrawerToggle }) => {
+const Sidebar = ({ mobileOpen, onDrawerToggle, isSidebarVisible, setIsSidebarVisible }) => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -33,31 +35,42 @@ const Sidebar = ({ mobileOpen, onDrawerToggle }) => {
     setIsAdmin(storedUser?.role === 'admin');
   }, []);
 
+  const toggleSidebar = () => {
+    const newVisibility = !isSidebarVisible;
+    setIsSidebarVisible(newVisibility);
+    localStorage.setItem('sidebarVisible', newVisibility);
+  };
+
   const drawerContent = (
     <>
-      {/* Sidebar Header */}
       <Toolbar
         sx={{
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)', // Makes sidebar semi-transparent
-          zIndex: 2, // Keeps sidebar above content but under animation
+          background: 'linear-gradient(135deg, rgba(255, 235, 59, 0.3) 0%, rgba(56, 142, 60, 0.3) 100%)', // Slightly opaque for contrast
+          backdropFilter: 'blur(15px)',
+          borderBottom: '1px solid rgba(255, 235, 59, 0.5)',
+          zIndex: 2,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
         }}
       >
-        <Box sx={{ textAlign: 'center', width: '100%' }}>
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 'bold',
-              color: '#fff',
-              textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5)',
-            }}
-          >
-            {isLoggedIn ? (isAdmin ? 'Sushi Admin' : 'Sushi Customer') : 'Sushi Guest'}
-          </Typography>
-        </Box>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 'bold',
+            color: '#000', // Black and bold
+            fontFamily: "'Sawarabi Mincho', serif",
+            textShadow: '1px 1px 2px rgba(255, 255, 255, 0.5)', // Light shadow for readability
+          }}
+        >
+          {isLoggedIn ? (isAdmin ? 'Sushi Admin' : 'Sushi Customer') : 'Sushi Guest'}
+        </Typography>
+        <IconButton onClick={toggleSidebar} sx={{ color: '#000' }}>
+          <CloseIcon />
+        </IconButton>
       </Toolbar>
 
-      {/* Sidebar Menu */}
       <List sx={{ position: 'relative', zIndex: 2 }}>
         {[
           { to: '/', label: 'Home' },
@@ -70,8 +83,9 @@ const Sidebar = ({ mobileOpen, onDrawerToggle }) => {
               component={Link}
               to={item.to}
               sx={{
-                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+                '&:hover': { backgroundColor: 'rgba(255, 235, 59, 0.2)' },
                 py: 1.5,
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
               }}
             >
               <SushiIcon sx={{ mr: 2, color: '#ff5722' }} />
@@ -79,7 +93,10 @@ const Sidebar = ({ mobileOpen, onDrawerToggle }) => {
                 primary={item.label}
                 primaryTypographyProps={{
                   fontWeight: 'bold',
-                  color: '#fff',
+                  color: '#000', // Black and bold
+                  fontFamily: "'Sawarabi Mincho', serif",
+                  letterSpacing: '0.5px',
+                  textShadow: '1px 1px 2px rgba(255, 255, 255, 0.5)', // Light shadow for readability
                 }}
               />
             </ListItemButton>
@@ -89,9 +106,12 @@ const Sidebar = ({ mobileOpen, onDrawerToggle }) => {
     </>
   );
 
+  if (!isSidebarVisible) {
+    return null;
+  }
+
   return (
     <>
-      {/* Ensure the Shader Animation is placed in the background */}
       <Box
         sx={{
           position: 'fixed',
@@ -99,39 +119,39 @@ const Sidebar = ({ mobileOpen, onDrawerToggle }) => {
           left: 0,
           width: '100vw',
           height: '100vh',
-          zIndex: -1, // Push animation behind everything
-          pointerEvents: 'none', // Ensures sidebar interactivity
+          zIndex: -1,
+          pointerEvents: 'none',
         }}
       >
-        {/* Sushi Shader Animation */}
         <canvas id="sushiShaderCanvas" />
       </Box>
 
-      {/* Permanent Drawer (Desktop) */}
+      {/* Desktop Sidebar (Persistent) */}
       {isMediumUp && (
         <Drawer
-          variant="permanent"
+          variant="persistent"
+          open={isSidebarVisible}
           sx={{
             width: drawerWidth,
             flexShrink: 0,
             '& .MuiDrawer-paper': {
               width: drawerWidth,
               boxSizing: 'border-box',
-              background: 'rgba(20, 20, 20, 0.7)', // Semi-transparent background
-              backdropFilter: 'blur(10px)',
-              borderRight: '2px solid #ff5722',
+              background: 'rgba(255, 255, 255, 0.15)', // Slightly more opaque for black text
+              backdropFilter: 'blur(15px)',
+              borderRight: '2px solid rgba(255, 235, 59, 0.5)',
               overflow: 'hidden',
-              boxShadow: '2px 0 10px rgba(0, 0, 0, 0.3)',
-              zIndex: 2, // Keeps sidebar interactive but below animations
+              boxShadow: '4px 0 20px rgba(0, 0, 0, 0.4)',
+              zIndex: 2,
+              borderRadius: '0 20px 20px 0',
             },
           }}
-          open
         >
           {drawerContent}
         </Drawer>
       )}
 
-      {/* Temporary Drawer (Mobile) */}
+      {/* Mobile Sidebar (Temporary) */}
       {!isMediumUp && (
         <Drawer
           variant="temporary"
@@ -141,12 +161,13 @@ const Sidebar = ({ mobileOpen, onDrawerToggle }) => {
           sx={{
             '& .MuiDrawer-paper': {
               width: drawerWidth,
-              background: 'rgba(20, 20, 20, 0.7)',
-              backdropFilter: 'blur(10px)',
-              borderRight: '2px solid #ff5722',
+              background: 'rgba(255, 255, 255, 0.15)', // Slightly more opaque for black text
+              backdropFilter: 'blur(15px)',
+              borderRight: '2px solid rgba(255, 235, 59, 0.5)',
               overflow: 'hidden',
-              boxShadow: '2px 0 10px rgba(0, 0, 0, 0.3)',
+              boxShadow: '4px 0 20px rgba(0, 0, 0, 0.4)',
               zIndex: 2,
+              borderRadius: '0 20px 20px 0',
             },
           }}
         >

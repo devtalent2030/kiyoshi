@@ -2,7 +2,6 @@ import React from 'react';
 import {
   AppBar,
   Toolbar,
-  Typography,
   Button,
   Box,
   IconButton,
@@ -10,7 +9,8 @@ import {
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import MenuIcon from '@mui/icons-material/Menu';
-import SushiIcon from '@mui/icons-material/LocalDining'; // Sushi-themed icon
+import CloseIcon from '@mui/icons-material/Close';
+import SushiIcon from '@mui/icons-material/LocalDining';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 
@@ -20,7 +20,7 @@ const buttonVariants = {
   tap: { scale: 0.95 },
 };
 
-const Header = ({ onDrawerToggle }) => {
+const Header = ({ onDrawerToggle, isSidebarVisible, toggleSidebar }) => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
   const isLoggedIn = Boolean(localStorage.getItem('token'));
@@ -39,13 +39,11 @@ const Header = ({ onDrawerToggle }) => {
     <AppBar
       position="fixed"
       sx={{
-        background: 'linear-gradient(90deg, #ff5722 0%, #ef5350 100%)', // Sushi orange gradient
+        background: 'transparent', // Fully transparent background
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        width: '100%',
-        maxWidth: '1400px',
-        mx: 'auto',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-        borderBottom: '2px solid #388e3c', // Seaweed green accent
+        width: '100%', // Full width
+        boxShadow: 'none', // Remove shadow for cleaner transparency
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)', // Subtle border instead of solid green
       }}
     >
       <Toolbar
@@ -53,26 +51,24 @@ const Header = ({ onDrawerToggle }) => {
           display: 'flex',
           justifyContent: 'space-between',
           padding: { xs: '0 12px', sm: '0 24px' },
-          backgroundColor: 'rgba(255, 255, 255, 0.1)', // Glassy overlay
-          backdropFilter: 'blur(5px)',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)', // Very subtle overlay for contrast
+          backdropFilter: 'blur(8px)', // Enhanced blur for glassy effect
         }}
       >
-        {/* Logo/Title */}
+        {/* Logo/Title with Toggle */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <IconButton
+              color="inherit"
+              onClick={toggleSidebar}
+              sx={{ mr: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)', borderRadius: '50%' }}
+            >
+              {isSidebarVisible ? <CloseIcon sx={{ fontSize: '1.8rem' }} /> : <MenuIcon sx={{ fontSize: '1.8rem' }} />}
+            </IconButton>
+          </motion.div>
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
             <SushiIcon sx={{ fontSize: { xs: '1.5rem', sm: '2rem' }, mr: 1, color: '#fff' }} />
-            <Typography
-              variant="h6"
-              sx={{
-                fontFamily: "'Sawarabi Mincho', serif",
-                fontWeight: 'bold',
-                color: '#fff',
-                textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5)',
-                fontSize: { xs: '1.2rem', sm: '1.5rem' },
-              }}
-            >
-              
-            </Typography>
+            {/* Removed "Sushi App" Typography */}
           </motion.div>
         </Box>
 

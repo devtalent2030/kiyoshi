@@ -39,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
         field: 'IsPreMadeSet', 
         defaultValue: false 
       },
+      // ADD THIS:
+      category: {
+        type: DataTypes.STRING,
+        field: 'Category', // matches your actual DB column name
+      },
     },
     {
       sequelize,

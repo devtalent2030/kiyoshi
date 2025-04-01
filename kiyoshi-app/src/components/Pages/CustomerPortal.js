@@ -17,13 +17,13 @@ import {
 import { motion } from 'framer-motion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import SushiIcon from '@mui/icons-material/LocalDining'; // Sushi-like icon
+import SushiIcon from '@mui/icons-material/LocalDining';
 
 // Animation variants
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  hover: { scale: 1.05, boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)' },
+  hover: { scale: 1.05, boxShadow: '0 12px 24px rgba(0, 0, 0, 0.4)' },
 };
 
 const CustomerPortal = () => {
@@ -115,7 +115,7 @@ const CustomerPortal = () => {
         px: { xs: 2, sm: 3, md: 4 },
         py: 4,
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%)', // Sushi-themed gradient
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%)',
         color: '#fff',
         width: '100%',
         maxWidth: '1400px',
@@ -136,8 +136,14 @@ const CustomerPortal = () => {
             fontFamily: "'Sawarabi Mincho', serif",
             fontWeight: 'bold',
             textAlign: 'center',
-            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
-            color: '#ff5722', // Salmon orange
+            textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)',
+            color: '#ffeb3b', // Gold for top-tier feel
+            background: 'linear-gradient(45deg, #ff5722, #ffeb3b)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            borderBottom: '2px solid #ffeb3b',
+            pb: 1,
+            mb: 4,
           }}
         >
           Welcome Back{profile ? `, ${profile.FirstName}!` : '!'}
@@ -151,10 +157,11 @@ const CustomerPortal = () => {
             <Card
               sx={{
                 p: 2,
-                borderRadius: '15px',
-                backgroundColor: 'rgba(255, 255, 255, 0.15)', // Glassmorphism
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+                borderRadius: '20px',
+                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(12px)',
+                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
+                border: '1px solid rgba(255, 235, 59, 0.3)', // Gold border
               }}
             >
               <CardContent>
@@ -162,34 +169,40 @@ const CustomerPortal = () => {
                   src={sushiProfile}
                   alt="Profile"
                   style={{
-                    width: '80px',
-                    height: '80px',
+                    width: '100px',
+                    height: '100px',
                     borderRadius: '50%',
                     objectFit: 'cover',
-                    margin: '0 auto 1rem',
+                    margin: '0 auto 1.5rem',
                     display: 'block',
-                    border: '2px solid #388e3c', // Seaweed green
+                    border: '3px solid #ffeb3b', // Thicker gold border
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
                   }}
                 />
                 <Typography
                   variant="h6"
                   gutterBottom
-                  sx={{ fontFamily: "'Sawarabi Mincho', serif", textAlign: 'center' }}
+                  sx={{
+                    fontFamily: "'Sawarabi Mincho', serif",
+                    textAlign: 'center',
+                    color: '#ffeb3b', // Gold for prominence
+                    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5)',
+                  }}
                 >
                   My Sushi Profile
                 </Typography>
                 {profile ? (
                   <>
-                    <Typography variant="body2">
+                    <Typography variant="body2" sx={{ color: '#ddd' }}>
                       <strong>Name:</strong> {profile.FirstName} {profile.LastName}
                     </Typography>
-                    <Typography variant="body2">
+                    <Typography variant="body2" sx={{ color: '#ddd' }}>
                       <strong>Email:</strong> {profile.EmailAddress}
                     </Typography>
-                    <Typography variant="body2">
+                    <Typography variant="body2" sx={{ color: '#ddd' }}>
                       <strong>Phone:</strong> {phoneNumber || 'Not set'}
                     </Typography>
-                    <Typography variant="body2">
+                    <Typography variant="body2" sx={{ color: '#ddd' }}>
                       <strong>Payment:</strong> {paymentInfo || 'Not set'}
                     </Typography>
                     {editingPhone ? (
@@ -221,7 +234,12 @@ const CustomerPortal = () => {
                         <Button
                           variant="contained"
                           onClick={() => setEditingPhone(true)}
-                          sx={{ mt: 2, backgroundColor: '#388e3c', '&:hover': { backgroundColor: '#2e6b27' } }}
+                          sx={{
+                            mt: 2,
+                            backgroundColor: '#388e3c',
+                            '&:hover': { backgroundColor: '#2e6b27' },
+                            borderRadius: '20px',
+                          }}
                         >
                           Update Phone
                         </Button>
@@ -255,7 +273,12 @@ const CustomerPortal = () => {
                         <Button
                           variant="contained"
                           onClick={() => setEditingPayment(true)}
-                          sx={{ mt: 2, backgroundColor: '#388e3c', '&:hover': { backgroundColor: '#2e6b27' } }}
+                          sx={{
+                            mt: 2,
+                            backgroundColor: '#388e3c',
+                            '&:hover': { backgroundColor: '#2e6b27' },
+                            borderRadius: '20px',
+                          }}
                         >
                           Update Payment
                         </Button>
@@ -278,17 +301,22 @@ const CustomerPortal = () => {
             <Card
               sx={{
                 p: 2,
-                borderRadius: '15px',
+                borderRadius: '20px',
                 backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+                backdropFilter: 'blur(12px)',
+                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
+                border: '1px solid rgba(255, 235, 59, 0.3)', // Gold border
               }}
             >
               <CardContent>
                 <Typography
                   variant="h6"
                   gutterBottom
-                  sx={{ fontFamily: "'Sawarabi Mincho', serif'" }}
+                  sx={{
+                    fontFamily: "'Sawarabi Mincho', serif",
+                    color: '#ffeb3b', // Gold for prominence
+                    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5)',
+                  }}
                 >
                   Favorite Sushi
                 </Typography>
@@ -296,7 +324,7 @@ const CustomerPortal = () => {
                   favorites.map((fav) => (
                     <Box key={fav.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                       <SushiIcon sx={{ mr: 1, color: '#ff5722' }} />
-                      <Typography variant="body2">
+                      <Typography variant="body2" sx={{ color: '#ddd' }}>
                         {fav.itemName} - ${Number(fav.price).toFixed(2)}
                       </Typography>
                     </Box>
@@ -317,17 +345,22 @@ const CustomerPortal = () => {
             <Card
               sx={{
                 p: 2,
-                borderRadius: '15px',
+                borderRadius: '20px',
                 backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+                backdropFilter: 'blur(12px)',
+                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
+                border: '1px solid rgba(255, 235, 59, 0.3)', // Gold border
               }}
             >
               <CardContent>
                 <Typography
                   variant="h6"
                   gutterBottom
-                  sx={{ fontFamily: "'Sawarabi Mincho', serif'" }}
+                  sx={{
+                    fontFamily: "'Sawarabi Mincho', serif",
+                    color: '#ffeb3b', // Gold for prominence
+                    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5)',
+                  }}
                 >
                   Recent Sushi Orders
                 </Typography>
@@ -349,8 +382,8 @@ const CustomerPortal = () => {
                         <Box sx={{ mt: 1, backgroundColor: 'rgba(0, 0, 0, 0.2)', p: 1, borderRadius: '5px' }}>
                           {order.items.map((item, index) => (
                             <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                              <Typography variant="body2">{item.name}</Typography>
-                              <Typography variant="body2">
+                              <Typography variant="body2" sx={{ color: '#ddd' }}>{item.name}</Typography>
+                              <Typography variant="body2" sx={{ color: '#ddd' }}>
                                 {item.quantity} x ${item.lineTotal.toFixed(2)}
                               </Typography>
                             </Box>
