@@ -1,74 +1,79 @@
-### **📜 README.md - Kiyoshi Database System**  
+# Kiyoshi Database System
+https://img.shields.io/github/repo-size/devtalent2030/kiyoshi
+https://img.shields.io/github/last-commit/devtalent2030/kiyoshi
+https://img.shields.io/github/issues/devtalent2030/kiyoshi
 
-```markdown
-# 🍣 Kiyoshi Database System
+## Project Overview
 
-![GitHub repo size](https://img.shields.io/github/repo-size/devtalent2030/kiyoshi)
-![GitHub last commit](https://img.shields.io/github/last-commit/devtalent2030/kiyoshi)
-![GitHub issues](https://img.shields.io/github/issues/devtalent2030/kiyoshi)
+Kiyoshi is a full-stack inventory and ordering system for a sushi restaurant built with:
+- React (Frontend)
+- Node.js / Express (Backend)
+- MySQL (Database)
 
-## 📌 Project Overview  
+The project consists of two main applications:
+1. kiyoshi-app/ – React frontend
+2. kiyoshi-server/ – Express backend API
 
-Kiyoshi is a **full-stack inventory and ordering system** for a sushi restaurant, built using **React (frontend), Node.js/Express (backend), and MySQL (database)**. The system allows customers to browse the menu, place orders, and track them in real-time, while restaurant staff can manage inventory, orders, and customer information.  
-
-This project is structured as **two main applications**:
-1. 🖥️ **Frontend (`kiyoshi-app/`)** - A React-based web application for customers and staff.
-2. 🖥️ **Backend (`kiyoshi-server/`)** - A Node.js/Express API handling authentication, orders, and inventory management.
-
----
-
-## 🚀 Features
-
-### 🔹 **Customer Features**
-✅ Browse the sushi menu with images  
-✅ Place orders and track their status  
-✅ Mark favorite menu items for easy access  
-✅ Secure account registration and login  
-
-### 🔹 **Admin Features**
-✅ View and manage all customer orders  
-✅ Add/update menu items and pricing  
-✅ Track inventory in real-time  
-✅ Assign orders to kitchen staff  
-
-### 🔹 **Technical Features**
-✅ REST API with **JWT Authentication**  
-✅ Secure **MySQL database** with optimized queries  
-✅ Full **CRUD operations** for menu, orders, and inventory  
-✅ **Role-based access control** (Customer vs. Admin)  
-✅ **Real-time order tracking** using WebSockets  
+The system allows customers to browse menu items, place orders, and track them, while administrators manage inventory, menu items, and order workflows.
 
 ---
 
-## 🏗️ Tech Stack
+## Features
 
-| **Technology**  | **Usage**  |
-|-----------------|------------|
-| **React.js**  | Frontend (User Interface)  |
-| **Node.js & Express.js**  | Backend (API & Authentication)  |
-| **MySQL**  | Database (Stores orders, users, menu, and inventory)  |
-| **Sequelize ORM**  | Database interaction & migrations  |
-| **JWT & Bcrypt**  | Authentication & Password Security  |
-| **Axios**  | API calls between frontend and backend  |
-| **Docker (optional)**  | Containerized Deployment  |
+### Customer Features
+- Browse sushi items with images
+- Place orders and track status
+- Mark favorite items
+- Register/login securely
+
+### Admin Features
+- Manage orders
+- Create/edit menu items
+- Real-time inventory tracking
+- Assign orders to kitchen staff
+
+### Technical Features
+- REST API with JWT auth
+- Secure MySQL database
+- CRUD for menu, orders, inventory
+- Role-based access control
+- Real-time updates via WebSockets
 
 ---
 
-## ⚡ Installation & Setup  
+## Tech Stack
 
-### 1️⃣ **Clone the Repository**
+| Technology | Purpose |
+|-----------|---------|
+| React.js | Frontend |
+| Node.js + Express | Backend API |
+| MySQL | Database |
+| Sequelize ORM | Models & migrations |
+| JWT + Bcrypt | Authentication |
+| Axios | API requests |
+| Docker | Deployment |
+
+---
+
+##  Installation & Setup
+
+### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/devtalent2030/kiyoshi.git
 cd kiyoshi-database
 ```
 
-### 2️⃣ **Backend Setup (`kiyoshi-server/`)**  
-#### Install dependencies:
+---
+
+## 2️⃣ Backend Setup (kiyoshi-server/)
+
+### Install dependencies
 ```bash
 cd kiyoshi-server
 npm install
 ```
-#### Configure `.env` (Create and add the following values)
+
+### Create .env
 ```env
 DB_HOST=localhost
 DB_USER=root
@@ -77,184 +82,115 @@ DB_NAME=kiyoshi_db
 PORT=4000
 JWT_SECRET=your_secret_key
 ```
-#### Run the backend server:
+
+### Start backend
 ```bash
 npm start
 ```
 
 ---
 
-### 3️⃣ **Frontend Setup (`kiyoshi-app/`)**  
-#### Install dependencies:
+## 3️⃣ Frontend Setup (kiyoshi-app/)
+
+### Install dependencies
 ```bash
 cd ../kiyoshi-app
 npm install
 ```
-#### Start the frontend:
+
+### Start frontend
 ```bash
 npm start
 ```
-The app will be available at: `http://localhost:3000/`
+
+App at: http://localhost:3000/
 
 ---
-```md
-## MySQL Setup & Troubleshooting
 
-### Starting MySQL
-To start the MySQL server, use the following command:
+# MySQL Setup & Troubleshooting
 
+## Start MySQL
 ```sh
 sudo /usr/local/mysql/support-files/mysql.server start
 ```
 
-If successful, you should see:
-
-```sh
-Starting MySQL
-SUCCESS!
-```
-
-### Logging Into MySQL
-Once MySQL is running, log in using:
-
+## Login
 ```sh
 mysql -u root -p
 ```
 
-Enter your MySQL root password when prompted.
-
-If successful, you should see:
-
-```sh
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 8
-Server version: 8.0.40 MySQL Community Server - GPL
-```
-
 ---
 
-## Fixing MySQL Startup Issues
-If MySQL fails to start due to an improperly stopped instance, follow these steps:
+## Fix MySQL Startup Issues
 
-### 1️⃣ Remove the MySQL PID File  
-Run this command to delete any stale PID files:
-
+### Remove stale PID
 ```sh
 sudo rm -f /usr/local/mysql/data/*.pid
 ```
 
-### 2️⃣ Restart MySQL  
-Now, restart MySQL with:
-
+### Restart
 ```sh
 sudo /usr/local/mysql/support-files/mysql.server start
 ```
 
-Check its status:
-
-```sh
-sudo /usr/local/mysql/support-files/mysql.server status
-```
-
-Expected output:
-
-```sh
-SUCCESS! MySQL running (PID)
-```
-
----
-
-### 3️⃣ Verify Database Connection  
-If MySQL starts successfully, log in and check if your database is accessible:
-
-```sh
-mysql -u root -p
-```
-
-Once inside MySQL, run:
-
+### Verify
 ```sql
 SHOW DATABASES;
 USE kiyoshi_db;
 SHOW TABLES;
 ```
 
-This ensures that your `kiyoshi_db` database is present and accessible.
-
 ---
 
-✅ **You're all set!** If you encounter further issues, ensure MySQL is installed correctly and that the `mysqld` service is running.
+# Folder Structure
 ```
-
----
-## 📂 Folder Structure  
-
-
 kiyoshi-database/
-│── kiyoshi-app/            # Frontend (React)
+│── kiyoshi-app/
 │   ├── src/
 │   ├── public/
 │   ├── package.json
-│── kiyoshi-server/         # Backend (Node.js/Express)
-│   ├── routes/             # API Routes
-│   ├── models/             # Database models
-│   ├── controllers/        # Business logic
-│   ├── middleware/         # Authentication & validation
+│
+│── kiyoshi-server/
+│   ├── routes/
+│   ├── models/
+│   ├── controllers/
+│   ├── middleware/
 │   ├── package.json
-│── migrations/             # Database migrations
-│── seeders/                # Sample data for testing
-│── .gitignore              # Exclude sensitive files
-│── README.md               # Documentation
-```
----
-
-## 📝 API Endpoints  
-
-| **Method** | **Endpoint** | **Description** | **Auth Required** |
-|-----------|-------------|----------------|----------------|
-| **POST** | `/auth/register` | Register a new user | ❌ No |
-| **POST** | `/auth/login` | Login and get JWT token | ❌ No |
-| **GET** | `/menu` | Fetch all menu items | ❌ No |
-| **POST** | `/orders` | Place an order | ✅ Yes |
-| **GET** | `/orders/:id` | View order details | ✅ Yes |
-| **PUT** | `/orders/:id/status` | Update order status (Admin) | ✅ Yes (Admin) |
-| **GET** | `/inventory` | View stock levels | ✅ Yes (Admin) |
-
----
-
-## 🛠️ Future Enhancements  
-🔹 **Payment integration (Stripe, PayPal, etc.)**  
-🔹 **Mobile app version using React Native**  
-🔹 **AI-based menu recommendations**  
-🔹 **Dark mode UI theme**  
-
----
-
-## 🤝 Contribution  
-
-We welcome contributions! Follow these steps:  
-1. **Fork the repository**  
-2. Create a new branch: `git checkout -b feature-branch`  
-3. Make your changes and commit: `git commit -m "Your changes"`  
-4. Push to your fork and submit a Pull Request  
-
----
-
-## 🏆 Credits  
-
-- **Developer:** [Talent Nyota & Conner Cullity](https://github.com/devtalent2030)  
-- **Inspiration:** Sushi ordering and inventory management system  
-
----
-
-## 📜 License  
-
-This project is licensed under the **MIT License** - you are free to modify and distribute it with attribution.  
-
----
-
-### ⭐ **If you find this project useful, give it a star on GitHub!** ⭐
+│
+│── migrations/
+│── seeders/
+│── .gitignore
+│── README.md
 ```
 
 ---
 
+#  API Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|-------|
+| POST | /auth/register | Register user | No |
+| POST | /auth/login | Login | No |
+| GET | /menu | Get menu | No |
+| POST | /orders | Create order | Yes |
+| GET | /orders/:id | Get order | Yes |
+| PUT | /orders/:id/status | Update status | Admin |
+| GET | /inventory | Inventory | Admin |
+
+---
+
+# 🛠️ Future Enhancements
+- Payment integration
+- Mobile version
+- AI recommendations
+- Dark mode
+
+---
+
+#  Credits
+Talent Nyota & Conner Cullity
+
+---
+
+#  License
+MIT License
